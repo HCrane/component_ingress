@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  ma_dataset_ingress
+
+  SAM Template for ingress
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 100
+    MemorySize: 2048
+
+Resources:
+  SQSIngestion:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      # CodeUri: ingress/
+      # Handler: app.lambda_handler
+      # Runtime: python3.9
+      # Layers:
+      #   - !Ref PythonLibLayer
+      Architectures:
+        - x86_64
+      Events:
+        SQSFill:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt SQSQueue.Arn
+            BatchSize: 2
+      ReservedConcurrentExecutions: 50
+      Policies: 
+        - S3CrudPolicy:
+            BucketName: !Ref S3DatasetBucket
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DynamoDBDSData
+
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBDSData
+          S3_BUCKET_NAME: !Ref S3DatasetBucket
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ingress
+      DockerTag: python3.9-v1
+  SQSQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 100
+      Tags:
+        - Key: project
+          Value: ma
+  # PythonLibLayer:
+  #   Type: AWS::Serverless::LayerVersion
+  #   Properties:
+  #     ContentUri: lib_layer
+  #     CompatibleRuntimes:
+  #       - python3.9
+  #   Metadata:
+  #     BuildMethod: python3.9
+  S3DatasetBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+      Tags:
+        - Key: project
+          Value: ma
+  DynamoDBDSData:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      # - AttributeName: classification
+      #   AttributeType: S
+      KeySchema: 
+        - AttributeName: id
+          KeyType: HASH
+        # - AttributeName: classification
+        #   KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: project
+          Value: ma
+
+
+
+        
+
+  
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  # HelloWorldApi:
+  #   Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+  #   Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  SQSIngestion:
+    Description: "Function ARN for Ingestion of SQS Queue Messages"
+    Value: !GetAtt SQSIngestion.Arn
+  SQSIngestionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt SQSIngestionRole.Arn
+  SQSQueue:
+    Description: "Arn for ingestion Queue"
+    Value: !GetAtt SQSQueue.Arn
+  S3DatasetBucket:
+    Description: "Name for image bucket"
+    Value: !Ref S3DatasetBucket
+  DynamoDBDSDataName:
+    Description: "Name of the DynamoDB Table"
+    Value: !Ref DynamoDBDSData

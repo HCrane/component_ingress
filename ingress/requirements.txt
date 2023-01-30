@@ -1,0 +1,5 @@
+requests
+boto3 == 1.26.5
+ImageHash
+opencv-python == 4.6.0.66
+Pillow

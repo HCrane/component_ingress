@@ -1,0 +1,26 @@
+{
+  "Records": [
+    {
+      "messageId": "8ab459b5-f588-49e7-a53c-8e7994d137d2",
+      "receiptHandle": "AQEBqTAZdPIJYREVJFBc+8iBmFH4C4wbbP8iVDsWeCbHkE590eaN5oZf/udva646erqq5dx7ynJdLi+RfKFbhJZYyKQ9Yb6efva64vllZ9ZEjOu3aHhbNrbt+AsuABBXNae1ud4uqzdWgoPlmU8/fNvCPRzgFdzsKnhQLGLxyZ1XSQiL49JQiKxWxEPgflx4JX3dc7wcZkEXIhEzzMxwGMUMyKQAlsFQQ5HMCB327Z0D3lQFpoJjNzir8cYjV5rcGduTvcGLoZqhkELbFBaPMFZlHvisdTo3CPAvTx2ZHbLEWFxSH+bR1+Tn/7w0Ab8m3tOCOcHAF7+Be4VF7J36bwSGjOtKJqzi8q9eD/9TWao7oJg8eFpp19KsHC0xtaAvLl+I8+s6OAi5JwZ1kaWbO2REUIjVmNDdAMiYDjtIszV1gZKFXqUlPdKYuA0Oze3ah2gc",
+      "body": '{
+        "url": "https://i.imgur.com/l6PWy6i.jpg",
+        "origin": "reddit_sub_underarms",
+        "group": "body-parts_upper-body",
+        "data_source": "data_old",
+        "classification": "porn"
+      }',
+      "attributes": {
+        "ApproximateReceiveCount": "18",
+        "SentTimestamp": "1671970453715",
+        "SenderId": "AIDARVES7CGRJHH2ODWRL",
+        "ApproximateFirstReceiveTimestamp": "1671970453715"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "cddda7fb419ec92457f269cb8fc96ad4",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:eu-central-1:114124853666:ma-dataset-ingress-SQSQueue-LeLxuAAjVPIR",
+      "awsRegion": "eu-central-1"
+    }
+  ]
+}
